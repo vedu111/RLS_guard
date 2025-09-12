@@ -2,6 +2,8 @@
 
 A secure classroom progress tracking web application built with React, TypeScript, and Supabase. This application demonstrates Row-Level Security (RLS) implementation where students can only view their own progress while teachers can manage all classroom data.
 
+<img width="1609" height="902" alt="image" src="https://github.com/user-attachments/assets/26094faa-6eb0-4824-9452-f815038afcc0" />
+
 ![RLS Guard Dog](https://img.shields.io/badge/React-19.1.1-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue) ![Supabase](https://img.shields.io/badge/Supabase-2.57.4-green) ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1.13-cyan) ![Vite](https://img.shields.io/badge/Vite-7.1.2-purple)
 
 ## 📋 Table of Contents
