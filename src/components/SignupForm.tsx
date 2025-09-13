@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useAuth } from '../hooks/useAuth'
 
 interface SignupFormProps {
   onToggleMode: () => void
@@ -12,26 +13,23 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const { signUp } = useAuth()
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     setLoading(true)
     setError('')
     setSuccess(false)
 
-    // Simulate localStorage usage (would be replaced with actual implementation)
-    try {
-      // localStorage.setItem('rls_guard_dog_pending_role', role)
-    } catch {}
-
-    // Simulate API call
-    setTimeout(() => {
-      if (email && password && name) {
-        setSuccess(true)
-      } else {
-        setError('Please fill in all fields')
-      }
-      setLoading(false)
-    }, 1500)
+    const { error } = await signUp(email, password, name, role)
+    
+    if (error) {
+      setError(error.message)
+    } else {
+      setSuccess(true)
+    }
+    
+    setLoading(false)
   }
 
   if (success) {
@@ -50,23 +48,23 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
             <div className="bg-gradient-to-r from-white/95 to-white/90 backdrop-blur-sm p-6 text-center">
               <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-500/20 mb-4">
                 <svg className="h-8 w-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <h2 className="text-3xl font-bold text-slate-900 mb-2">
-                Check your email
+                Account Created Successfully!
               </h2>
               <p className="text-gray-600 mb-6">
-                We've sent you a confirmation link. Please check your email and click the link to verify your account.
+                Your account has been created and you're ready to sign in. Welcome to RLS Guard Dog!
               </p>
               <button
                 onClick={onToggleMode}
                 className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors group"
               >
+                <span>Sign In Now</span>
                 <svg className="w-5 h-5 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-                <span>Back to sign in</span>
               </button>
             </div>
           </div>
@@ -114,7 +112,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
 
           {/* Form */}
           <div className="p-6 space-y-6">
-            <div className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
                   Full Name
@@ -200,69 +198,69 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
                   </button>
                 </div>
               </div>
-            </div>
 
-            {/* Features */}
-            <div className="space-y-3 pt-2">
-              <div className="flex items-center space-x-3 group">
-                <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
-                  <svg className="text-green-400 text-sm w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              {/* Features */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center space-x-3 group">
+                  <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
+                    <svg className="text-green-400 text-sm w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-300 text-sm">Instant account activation</span>
                 </div>
-                <span className="text-gray-300 text-sm">Email verification for security</span>
-              </div>
-              <div className="flex items-center space-x-3 group">
-                <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
-                  <svg className="text-green-400 text-sm w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+                <div className="flex items-center space-x-3 group">
+                  <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
+                    <svg className="text-green-400 text-sm w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-300 text-sm">Access to all features</span>
                 </div>
-                <span className="text-gray-300 text-sm">Access to premium features</span>
-              </div>
-              <div className="flex items-center space-x-3 group">
-                <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
-                  <svg className="text-green-400 text-sm w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+                <div className="flex items-center space-x-3 group">
+                  <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
+                    <svg className="text-green-400 text-sm w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-300 text-sm">24/7 support & community</span>
                 </div>
-                <span className="text-gray-300 text-sm">24/7 support & community</span>
               </div>
-            </div>
 
-            {error && (
-              <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-3">
-                <div className="flex items-center space-x-2">
-                  <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-red-400 text-sm">{error}</span>
+              {error && (
+                <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-3">
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-red-400 text-sm">{error}</span>
+                  </div>
                 </div>
-              </div>
-            )}
-
-            <button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="w-full inline-flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white px-6 py-3 rounded-lg font-medium transition-colors group"
-            >
-              {loading ? (
-                <>
-                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Creating account...</span>
-                </>
-              ) : (
-                <>
-                  <svg className="w-5 h-5 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                  </svg>
-                  <span>Create account</span>
-                </>
               )}
-            </button>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full inline-flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white px-6 py-3 rounded-lg font-medium transition-colors group"
+              >
+                {loading ? (
+                  <>
+                    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Creating account...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    <span>Create account</span>
+                  </>
+                )}
+              </button>
+            </form>
           </div>
         </div>
 
