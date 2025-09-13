@@ -121,6 +121,9 @@ rls-guard-dog/
 
 ### Tables
 
+<img width="1208" height="563" alt="image" src="https://github.com/user-attachments/assets/b44a0c8f-2b2e-4e78-be57-9ef10bd27239" />
+
+
 #### `users` Table
 ```sql
 CREATE TABLE users (
